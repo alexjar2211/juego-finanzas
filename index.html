@@ -7,17 +7,17 @@
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>Preguntas</title>
 	<link rel="stylesheet" href="css/style.css">
-	<link href="https://fonts.googleapis.com/css?family=Montserrat:700, 400&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="css/animations.css">
 	<script src="js/jquery-3.3.1.min.js"></script>
+	<script src="js/jquery-ui.min.js"></script>
 	<script src="js/clock.js"></script>
 </head>
 
 <body>
 	<div class="container">
-		<h1 style="text-align: center">FINAN27</h1>
-		<h3 style="text-align: center; color: rgb(100, 100, 100); font-weight: 400" class="preguntas-random"></h3>
-		<!-- <p class="pregunta">Cual de las siguientes es una razon financiera</p> -->
-		<!-- <h1>FINAN27</h1> -->
+		<h1 style="text-align: center" class="titulo-app">FINAN27</h1>
+		<h3 class="preguntas-random"></h3>
+		<p class="pregunta hidden">Cual de las siguientes es una razon financiera</p>
 		<div class="container-respuestas">
 			<section class="respuestas">
 				<p>Razon de liquidez</p>
@@ -25,12 +25,12 @@
 			</section>
 
 			<section class="container-timer">
-				<div class="timer">
+				<div class="timer" id="timer">
 					<div class="hand">
 					</div>
 				</div>
 
-				<p class="time">0:30</p>
+				<p class="time">0:20</p>
 			</section>
 
 			<h1 class="start-game">START</h1>
@@ -47,8 +47,7 @@
 		</div>
 
 		<div class="nombre">
-			<input type="text" placeholder="Ingresa tu nombre">
-			<!-- <span>Tu nombre</span> -->
+			<input type="text" placeholder="Ingresa tu nombre" id="txtNombre">
 		</div>
 	</div>
 
@@ -56,8 +55,11 @@
 			<img src="img/scoreboard.png" alt="">
 	</div>
 
-	<div class="fill-background">
-
+	<div class="fill-background"></div>
+	
+	<div class="container-puntuacion">
+		<span>Puntuacion: </span>
+		<span class="puntuaction">0</span>
 	</div>
 
 	<!-- <div class="bonus">

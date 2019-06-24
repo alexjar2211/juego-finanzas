@@ -1,0 +1,108 @@
+@keyframes countdown {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+
+@keyframes question-random {
+	0% {
+		content: 'Te crees capaz de superar el reto ? ';
+		opacity: 1;
+	}
+
+	20% {
+		opacity: 0;
+	}
+
+	30% {
+		opacity: 1;
+		content: 'Quieres demostrar que no vales en la materia ?'
+	}
+
+	40% {
+		opacity: 0;
+	}
+
+	50% {
+		opacity: 1;
+		content: 'Deseas ser el orgullo de tu mama ?'
+	}
+
+	60%{
+		opacity: 0;
+	}
+
+	70% {
+		opacity: 1;
+		content: 'Te crees capaz de superar el reto ? ';
+	}
+
+	80%{
+		opacity: 0;
+	}
+
+	90%, 100%{
+		opacity: 1;
+		content: 'Deseas ser el orgullo de tu mama ? ';
+	}
+}
+
+@keyframes fillBackground {
+	to {
+		width: 2000px;
+		height: 2000px;
+
+	}
+}
+
+@keyframes growScale {
+	0% {
+		transform: scale(1);
+	}
+
+	100% {
+		transform: scale(1.7);
+		margin-top: -100px;
+	}
+}
+
+@keyframes girar {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes aumentarTamaño {
+	0% {
+		width: 20px;
+	}
+
+	100% {
+		width: 400px;
+		left: 33%;
+		bottom: 160px;
+	}
+}
+
+@keyframes temblarClock{
+	0%{
+		transform: scale(1)
+	}
+	
+	50%{
+		transform: scale(1.1);
+	}
+	
+	100%{
+		transform: scale(1)
+	}
+}
