@@ -1,0 +1,348 @@
+*{
+	font-family: 'Montserrat', sans-serif;
+}
+
+html, body{
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box
+	/* background: red; */
+}
+
+.container{
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+	padding: 50px 100px;
+}
+
+.start-game{
+	cursor: pointer;
+	border: 1px solid #000;
+	box-sizing: border-box;
+	padding: 80px 50px;
+	border-radius: 100%;
+	background: #fff;
+}
+
+.start-game:hover{
+	transform: scale(1.1);
+	transition: .2s linear;
+}
+
+.pregunta{
+	text-align: center;
+	font-size: 1.9rem;
+}
+
+.container-timer{
+	text-align: center;
+}
+
+.container-timer > h3{
+	margin-top: 30px;
+}
+
+.container-respuestas{
+	display: flex;
+	justify-content: space-between;
+	margin: 5% auto 0 auto;
+	width: 80%;
+	align-items: center;
+}
+
+.respuestas{
+	height: 150px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between; 
+	visibility: hidden;
+}
+
+.respuestas > p{
+	border: 1px solid #2b2b2b;
+	border-radius: 10px;
+	padding: 15px 35px;
+	cursor: pointer;
+}
+
+.respuestas > p:hover{
+	transform: scale(1.2);
+	transition: transform .3s ease-out;
+}
+
+.container-velocidad{
+	width: auto;
+	margin: 0 auto;
+}
+
+.velocidad{
+	width: 100%;
+	margin: 100px auto;
+	font-size: 2rem;
+	text-align: center;
+}
+
+.bonus{
+	width: 100px;
+	/* height: 100px; */
+	/* background: red; */
+	position: absolute;
+	bottom: 20px;
+	left: 0;
+	animation: girar 1s linear infinite, 
+					aumentarTamaño 5s linear;
+}
+
+.bonus img{
+	width: 100%;
+	vertical-align: top;
+}
+
+.explotion{
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	margin: auto;
+	width: 600px;
+	height: 200px;
+	margin-top: 30px;
+	display: none;
+}
+
+.explotion img{
+	width: 100%;
+	vertical-align: top;
+}
+
+.growScale{
+	animation: growScale 1s linear;
+}
+
+@keyframes growScale{
+	0%{
+		transform: scale(1);
+	}
+
+	100%{
+		transform: scale(1.7);
+		margin-top: -100px;
+	}
+}
+
+@keyframes girar{
+	0%{
+		transform: rotate(0deg);
+	}
+
+	100%{
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes aumentarTamaño{
+	0%{
+		width: 20px;
+	}
+
+	100%{
+		width: 400px;
+		left: 33%;
+		bottom: 160px;
+	}
+}
+
+.container-timer{
+	display: none;
+	align-items:center;
+	justify-content:center;
+	position: relative;
+	/* background:red; */
+}
+
+.timer {
+	width: 5em;
+	height: 5em;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: .5em solid #fff;
+	border-radius: 100%;
+	position: relative;
+}
+
+.timer:before, .timer:after {
+	content: '';
+	display: block;
+	position: absolute;
+}
+
+.timer:before {
+	height: .5em;
+	width: .5em;
+	top: -1.6em;
+	border-radius: 100%;
+	left: 50%;
+	margin-left: -.75em;
+	background: transparent;
+	/* animation: changeColor 10s; */
+	border: .5em solid #fff;
+}
+
+.timer:after {
+	width: 1em;
+	height: 1em;
+	background: #fff;
+	right: 0;
+	top: -.25em;
+	border-radius: 100%;
+}
+ 
+.hand {
+	background: transparent;
+	/* animation: changeColor 10s; */
+	height: 1em;
+	width: 1em;
+	position: relative;
+	display: flex;
+	justify-content: center;
+	border-radius: 100%;
+	border: 1.4em solid #fff;
+}
+
+.hand:before, .hand:after {
+	content: '';
+	display: block;
+	position: relative;
+}
+.hand:before {
+	width: .325em;
+	height: 1.6em;
+	top: -1.4em;
+	background:#1BB287;
+	transform-origin: 50% 125%;
+	animation:countdown 30s linear;
+ }
+
+ .time{
+	 position: absolute;
+	 bottom: -100px;
+	 left: 0;
+	 right: 0;
+	font-size: 2rem;
+	text-align: center;
+	color: #fff;
+	font-weight: 400;
+	/* margin-left: 10px; */
+ }
+
+ @keyframes countdown{
+	0%{
+	  transform:rotate(0deg);
+	}
+	
+	100%{
+	  transform:rotate(360deg);
+	}
+ }
+
+.scoreboard{
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	padding: 10px;
+	width: 50px;
+	cursor: pointer;
+}
+
+.scoreboard img{
+	width: 100%;
+	vertical-align: top;
+}
+
+.preguntas-random:after{
+	content: '';
+	animation: question-random 20s ease-in-out infinite;
+}
+
+@keyframes question-random{
+	0%{
+		content: 'Te crees capaz de superar el reto ? ';
+		opacity: 1;
+	}
+
+	20%{
+		opacity: 0;
+	}
+		
+	30%{
+		opacity: 1;
+		content: 'Quieres demostrar que no vales en la materia ?'
+	}
+		
+	40%{
+		opacity: 0;
+	}
+		
+	50%{
+		opacity: 1;
+		content: 'Deseas ser el orgullo de tu mama ?'
+	}
+}
+
+.nombre{
+	margin: 30px auto;
+	width: 200px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	
+}
+
+.nombre input{
+	border: none;
+	/* border-bottom: 1px solid #000; */
+	font-weight: 400;
+	padding-top: 10px;
+	font-size: 1.6rem;
+	text-align: center;
+	outline: none;
+	padding-bottom: 5px;
+	background: transparent;
+}
+
+.fill-background{
+	position: absolute;
+	z-index: -1;
+	background: #1BB287;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	margin: auto;
+	border-radius: 100%;
+	box-sizing: border-box;
+	width: 10px;
+	height: 10px;
+}
+
+.scale-background{
+	 transform: scale(1000);
+	 transition: transform .9s ease-in;
+	/*transition:  transform .2s; */
+	/* animation: fillBackground .2s ease-in;
+	animation-fill-mode: forwards; */
+}
+
+@keyframes fillBackground{
+	to{
+		width: 2000px;
+		height: 2000px;
+		
+	}
+}
