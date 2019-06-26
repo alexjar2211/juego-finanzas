@@ -8,7 +8,7 @@ html,
 body {
 	width: 100%;
 	height: 100%;
-	overflow: hidden;
+	overflow: hidden;	
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box
@@ -69,6 +69,7 @@ body {
 	flex-direction: column;
 	justify-content: space-between;
 	visibility: hidden;
+	text-align: center;
 }
 
 .respuestas>p {
@@ -203,6 +204,7 @@ body {
 	z-index: 100;
 	border-radius: 100%;
 	border: 1.4em solid #fff;
+	/* animation: countdown 20s linear; */
 }
 
 .hand:before,
@@ -218,7 +220,7 @@ body {
 	top: -1.4em;
 	background: #1BB287;
 	transform-origin: 50% 125%;
-	animation: countdown 20s linear;
+	/* animation: countdown 20s linear; */
 }
 
 .hand:before {

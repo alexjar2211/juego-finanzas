@@ -7,6 +7,12 @@ $(document).ready(function (e) {
 	let clock;
 	let nombre;
 	let warning = true;
+	let gradosInicial = 0;
+	let gradosFinal = 360;
+	let gradosActual = 0;
+	let segundos = 20;
+	let tiempoAvance = 30;
+	let avanceGrados = (gradosFinal / segundos)/tiempoAvance;
 
 
 	$(".start-game").click(function (e) {
@@ -33,6 +39,12 @@ $(document).ready(function (e) {
 
 		timer = minutos, minutes, seconds;
 		clock = setInterval(changeClock, intervalTime);
+
+		setInterval(function(e){
+			var el = document.getElementById("hand");
+			gradosActual+=avanceGrados;
+			el.style.webkitTransform = 'rotate(' + gradosActual + 'deg)';	
+		},tiempoAvance);
 	})
 
 	function changeClock() {
@@ -74,11 +86,11 @@ $(document).ready(function (e) {
 				// 	warning = !warning;
 				// }, 1000);
 
-				if(warning){
-					
-					$( ".fill-background" ).animate({
+				if (warning) {
+
+					$(".fill-background").animate({
 						backgroundColor: "#dc0d32"
-					}, 400 );
+					}, 400);
 
 					// $('.timer').css({
 					// 	'--color':"#dc0d32"
@@ -88,8 +100,8 @@ $(document).ready(function (e) {
 					// $('.timer').css('data-content','#dc0d32');
 
 
-				}else{
-					$( ".fill-background" ).animate({
+				} else {
+					$(".fill-background").animate({
 						backgroundColor: "#1bb287"
 					}, 400);
 
@@ -114,7 +126,7 @@ $(document).ready(function (e) {
 
 	}
 
-	$(".respuesta").click(function(e){
+	$(".respuesta").click(function (e) {
 
 		const preguntas = [
 			$(".r1"),
@@ -135,10 +147,33 @@ $(document).ready(function (e) {
 			isCorrect
 		});
 
-		setTimeout(function(e){
+		var el = document.getElementById("hand");
+
+		var st = window.getComputedStyle(el, null);
+
+		var tr = st.getPropertyValue("-webkit-transform") ||
+			st.getPropertyValue("-moz-transform") ||
+			st.getPropertyValue("-ms-transform") ||
+			st.getPropertyValue("-o-transform") ||
+			st.getPropertyValue("transform") ||
+			"Either no transform set, or browser doesn't do getComputedStyle";
+
+		var values = tr.split('(')[1],
+			values = values.split(')')[0],
+			values = values.split(',');
+
+		var a = values[0]; // 0.866025
+		var b = values[1]; // 0.5
+		var c = values[2]; // -0.5
+		var d = values[3]; // 0.8660253
+
+		var angle = Math.round(Math.atan2(b, a) * (180/Math.PI));
+		gradosActual = gradosActual - 50;
+	
+		setTimeout(function (e) {
 			$('.fade-text').animate({
-				'opacity':'0'
-			}, 500, function(e){
+				'opacity': '0'
+			}, 500, function (e) {
 				$(".pregunta").text('No sera de tomar un traguito ?');
 
 				for (let index = 0; index < 4; index++) {
@@ -146,9 +181,9 @@ $(document).ready(function (e) {
 				}
 
 				$('.fade-text').animate({
-					'opacity':'1'
-				},500);
-				
+					'opacity': '1'
+				}, 500);
+
 			})
 		}, 300);
 	})
