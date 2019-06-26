@@ -113,4 +113,43 @@ $(document).ready(function (e) {
 	function temblarClock() {
 
 	}
+
+	$(".respuesta").click(function(e){
+
+		const preguntas = [
+			$(".r1"),
+			$(".r2"),
+			$(".r3"),
+			$(".r4")
+		];
+
+		const respuestas = [
+			'Creo que si',
+			'No gracias yo no tomo',
+			'No sera mejor dos',
+			'Creo que si x2'
+		];
+
+		const isCorrect = $(this).hasClass('respuesta-correcta');
+		console.log({
+			isCorrect
+		});
+
+		setTimeout(function(e){
+			$('.fade-text').animate({
+				'opacity':'0'
+			}, 500, function(e){
+				$(".pregunta").text('No sera de tomar un traguito ?');
+
+				for (let index = 0; index < 4; index++) {
+					preguntas[index].text(respuestas[index]);
+				}
+
+				$('.fade-text').animate({
+					'opacity':'1'
+				},500);
+				
+			})
+		}, 300);
+	})
 })
