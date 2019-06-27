@@ -7,12 +7,18 @@ $(document).ready(function (e) {
 	let clock;
 	let nombre;
 	let warning = true;
-	let gradosInicial = 0;
 	let gradosFinal = 360;
 	let gradosActual = 0;
 	let segundos = 20;
-	let tiempoAvance = 30;
-	let avanceGrados = (gradosFinal / segundos)/tiempoAvance;
+	let intervaloTiempoAvance = 10;
+	let gradosAvance = (gradosFinal / segundos) / 100;
+
+	console.log(gradosAvance);
+
+
+	// let tiempoAvance = 31.45;
+	// let avanceGrados = (gradosFinal / segundos)/tiempoAvance;
+	var avanzarTiempoReloj;
 
 
 	$(".start-game").click(function (e) {
@@ -40,22 +46,32 @@ $(document).ready(function (e) {
 		timer = minutos, minutes, seconds;
 		clock = setInterval(changeClock, intervalTime);
 
-		setInterval(function(e){
+		avanzarTiempoReloj = setInterval(function(e){
 			var el = document.getElementById("hand");
-			gradosActual+=avanceGrados;
-			el.style.webkitTransform = 'rotate(' + gradosActual + 'deg)';	
-		},tiempoAvance);
-	})
+			
+			gradosActual+=gradosAvance;
+
+			el.style.webkitTransform = 'rotate(' + gradosActual + 'deg)';
+			
+			if(gradosActual >= gradosFinal){
+				pararReloj();
+			}
+		},intervaloTiempoAvance);
+	});
+
+	function pararReloj(){
+		clearInterval(avanzarTiempoReloj);
+	}
 
 	function changeClock() {
 		minutes = parseInt(timer / 60, 10);
-		seconds = parseInt(timer % 60, 10);
-
+		seconds = parseInt(timer % 60, 10) ;
 		minutes = minutes < 10 ? "0" + minutes : minutes;
 		seconds = seconds < 10 ? "0" + seconds : seconds;
 
 		display.text(minutes + ":" + seconds);
 
+		console.log(timer);
 		timer--;
 
 		if (minutes == 0 && seconds == 0) {
@@ -107,8 +123,6 @@ $(document).ready(function (e) {
 
 					// document.querySelectorAll('.timer')[0].style.setProperty("--color", "#1bb287");
 					// $('.timer').attr('data-content','#1bb287');
-
-
 				}
 				warning = !warning;
 
@@ -147,28 +161,9 @@ $(document).ready(function (e) {
 			isCorrect
 		});
 
-		var el = document.getElementById("hand");
-
-		var st = window.getComputedStyle(el, null);
-
-		var tr = st.getPropertyValue("-webkit-transform") ||
-			st.getPropertyValue("-moz-transform") ||
-			st.getPropertyValue("-ms-transform") ||
-			st.getPropertyValue("-o-transform") ||
-			st.getPropertyValue("transform") ||
-			"Either no transform set, or browser doesn't do getComputedStyle";
-
-		var values = tr.split('(')[1],
-			values = values.split(')')[0],
-			values = values.split(',');
-
-		var a = values[0]; // 0.866025
-		var b = values[1]; // 0.5
-		var c = values[2]; // -0.5
-		var d = values[3]; // 0.8660253
-
-		var angle = Math.round(Math.atan2(b, a) * (180/Math.PI));
-		gradosActual = gradosActual - 50;
+		let segundosExtras = 3;
+		timer+=segundosExtras;
+		gradosActual = gradosActual - ( (gradosAvance*100)*segundosExtras );
 	
 		setTimeout(function (e) {
 			$('.fade-text').animate({
