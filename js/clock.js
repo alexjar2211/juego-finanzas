@@ -12,14 +12,45 @@ $(document).ready(function (e) {
 	let segundos = 20;
 	let intervaloTiempoAvance = 10;
 	let gradosAvance = (gradosFinal / segundos) / 100;
+	let avanzarTiempoReloj;
+	let puntajexPregunta = 50;
+	let preguntaActual = 0;
+	let listaPreguntas = [];
 
-	console.log(gradosAvance);
+	$.ajax({
+		type: "GET",
+		url: "php/preguntas.controller.php?action=consultar",
+		dataType: "json",
+		success: function (preguntas) {
+			listaPreguntas = preguntas;
+			agregarPreguntas();
+			preguntaActual++;
+		}
+	});
 
+	function agregarPreguntas() {
+		console.log("NUmero de acceso :" + preguntaActual);
+		$(".correct").removeClass("correct");
+		$(".pregunta").text(listaPreguntas[preguntaActual].titulo);
 
-	// let tiempoAvance = 31.45;
-	// let avanceGrados = (gradosFinal / segundos)/tiempoAvance;
-	var avanzarTiempoReloj;
+		const respuesta = ['r1', 'r2', 'r3', 'r4'];
 
+		$("." + respuesta[0]).text(listaPreguntas[preguntaActual].r1);
+		$("." + respuesta[1]).text(listaPreguntas[preguntaActual].r2);
+		$("." + respuesta[2]).text(listaPreguntas[preguntaActual].r3);
+		$("." + respuesta[3]).text(listaPreguntas[preguntaActual].r4);
+
+		const opciones = ((Object.keys(listaPreguntas[preguntaActual]).filter((e) => e.includes("r"))));
+
+		opciones.forEach((e) => {
+			let r = e.substr(1);
+			if (r == parseInt(listaPreguntas[preguntaActual].ok)) {
+				console.log(r);
+				console.log(listaPreguntas[preguntaActual].ok);
+				$(".r" + r).addClass('correct');
+			}
+		});
+	}
 
 	$(".start-game").click(function (e) {
 		changeBackground();
@@ -34,7 +65,9 @@ $(document).ready(function (e) {
 		nombre = $("#txtNombre").val();
 		$(".container-puntuacion").css({
 			'color': '#fff'
-		})
+		});
+
+		$(".scoreboard").fadeOut(200);
 
 		$(this).css({
 			'display': 'none'
@@ -46,32 +79,27 @@ $(document).ready(function (e) {
 		timer = minutos, minutes, seconds;
 		clock = setInterval(changeClock, intervalTime);
 
-		avanzarTiempoReloj = setInterval(function(e){
+		avanzarTiempoReloj = setInterval(function (e) {
 			var el = document.getElementById("hand");
-			
-			gradosActual+=gradosAvance;
-
+			gradosActual += gradosAvance;
 			el.style.webkitTransform = 'rotate(' + gradosActual + 'deg)';
-			
-			if(gradosActual >= gradosFinal){
+			if (gradosActual >= gradosFinal) {
 				pararReloj();
 			}
-		},intervaloTiempoAvance);
+		}, intervaloTiempoAvance);
 	});
 
-	function pararReloj(){
+	function pararReloj() {
 		clearInterval(avanzarTiempoReloj);
 	}
 
 	function changeClock() {
 		minutes = parseInt(timer / 60, 10);
-		seconds = parseInt(timer % 60, 10) ;
+		seconds = parseInt(timer % 60, 10);
 		minutes = minutes < 10 ? "0" + minutes : minutes;
 		seconds = seconds < 10 ? "0" + seconds : seconds;
 
 		display.text(minutes + ":" + seconds);
-
-		console.log(timer);
 		timer--;
 
 		if (minutes == 0 && seconds == 0) {
@@ -141,45 +169,60 @@ $(document).ready(function (e) {
 	}
 
 	$(".respuesta").click(function (e) {
-
-		const preguntas = [
-			$(".r1"),
-			$(".r2"),
-			$(".r3"),
-			$(".r4")
-		];
-
-		const respuestas = [
-			'Creo que si',
-			'No gracias yo no tomo',
-			'No sera mejor dos',
-			'Creo que si x2'
-		];
-
-		const isCorrect = $(this).hasClass('respuesta-correcta');
+		const isCorrect = $(this).hasClass('correct');
 		console.log({
 			isCorrect
 		});
 
+		if (isCorrect) {
+			$("#puntuacion").text(
+				parseInt($("#puntuacion").text()) + puntajexPregunta
+			);
+		};
+
 		let segundosExtras = 3;
-		timer+=segundosExtras;
-		gradosActual = gradosActual - ( (gradosAvance*100)*segundosExtras );
-	
+		timer += segundosExtras;
+		gradosActual = gradosActual - ((gradosAvance * 100) * segundosExtras);
+
 		setTimeout(function (e) {
 			$('.fade-text').animate({
-				'opacity': '0'
-			}, 500, function (e) {
-				$(".pregunta").text('No sera de tomar un traguito ?');
-
-				for (let index = 0; index < 4; index++) {
-					preguntas[index].text(respuestas[index]);
-				}
-
+				'opacity': '0.1'
+			}, 300, function (e) {
+				agregarPreguntas();
 				$('.fade-text').animate({
 					'opacity': '1'
-				}, 500);
+				}, 300);
+
+				preguntaActual++;
 
 			})
 		}, 300);
+	});
+
+	$(".scoreboard").click(function (e) {
+
+		$(".scoreboard-container").fadeIn(200);
+
+		$.ajax({
+			type: "GET",
+			url: "php/preguntas.controller.php?action=consultarPuntuaciones",
+			dataType: "json",
+			success: function (puntuaciones) {
+				puntuaciones.forEach((e) => {
+					let template = `	<div class="puntuaciones" style="margin-bottom: 10px">
+												<span style="padding-right: 10px;">${e.nombre}</span>
+												<span>..............................................................................................</span>
+												<span style="padding-left: 10px;">${e.puntos}</span>
+											</div>`;
+					$(".scoreboard-container .container-puntuaciones").append(template);
+				})
+			}
+		});
+
+
+	});
+
+	$(".btn-cerrar").click(function (e) {
+		$(".scoreboard-container").fadeOut(200);
 	})
 })
