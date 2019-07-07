@@ -1,7 +1,8 @@
 $(document).ready(function (e) {
 	let intervalTime = 1000;
-	let minutos = 19;
 	let display;
+	let segundos = 20;
+	let minutos = segundos - 1;
 	var timer = minutos,
 		minutes, seconds;
 	let clock;
@@ -9,13 +10,13 @@ $(document).ready(function (e) {
 	let warning = true;
 	let gradosFinal = 360;
 	let gradosActual = 0;
-	let segundos = 20;
 	let intervaloTiempoAvance = 10;
 	let gradosAvance = (gradosFinal / segundos) / 100;
 	let avanzarTiempoReloj;
 	let puntajexPregunta = 50;
 	let preguntaActual = 0;
 	let listaPreguntas = [];
+	let puntuacion = 0;
 
 	$.ajax({
 		type: "GET",
@@ -23,8 +24,12 @@ $(document).ready(function (e) {
 		dataType: "json",
 		success: function (preguntas) {
 			listaPreguntas = preguntas;
+			console.log('Ordenado', listaPreguntas);
+			listaPreguntas = listaPreguntas.sort(function () {
+				return Math.random() - 0.5
+			});
+			console.log('Desordenado', listaPreguntas);
 			agregarPreguntas();
-			preguntaActual++;
 		}
 	});
 
@@ -50,6 +55,8 @@ $(document).ready(function (e) {
 				$(".r" + r).addClass('correct');
 			}
 		});
+		console.log(preguntaActual);
+		preguntaActual++;
 	}
 
 	$(".start-game").click(function (e) {
@@ -69,9 +76,8 @@ $(document).ready(function (e) {
 
 		$(".scoreboard").fadeOut(200);
 
-		$(this).css({
-			'display': 'none'
-		});
+		$(this).addClass('hidden');
+
 		$(".container-timer").fadeIn();
 
 		display = $(".time");
@@ -90,7 +96,54 @@ $(document).ready(function (e) {
 	});
 
 	function pararReloj() {
+		// $(".scale-background").removeClass('scale-background');
 		clearInterval(avanzarTiempoReloj);
+
+		$(".mi-puntuacion .puntos").text($("#puntuacion").text());
+
+		setTimeout(function () {
+			// $(".fill-background").css({'background':'#fff'});
+			$(".fill-background").addClass('retract-background');
+			// $(".fill-background").removeClass('scale-background');
+			$(".container-timer").fadeOut();
+			$(".container-puntuacion").css({
+				'color': '#fff'
+			});
+
+			$(".respuestas").css({
+				'visibility': 'hidden'
+			});
+
+			$(".pregunta").addClass('hidden');
+		}, 1000);
+
+
+		setTimeout(function () {
+			$(".mi-puntuacion").fadeIn(600);
+			$(".fill-background").css({
+				'background': '#1BB287'
+			});
+
+			const datos = {
+				puntos: puntuacion,
+				nombre: $("#txtNombre").val()
+			};
+
+			$.ajax({
+				type: "POST",
+				url: "php/preguntas.controller.php?action=guardarPuntuacion",
+				data: datos,
+				dataType: "json",
+				success: function (response) {
+					console.log(response);
+				}
+			});
+
+			$(".container-respuestas").css({
+				'margin-top': '0'
+			});
+		}, 1500);
+
 	}
 
 	function changeClock() {
@@ -108,27 +161,9 @@ $(document).ready(function (e) {
 			return;
 		}
 
-		if (seconds <= 15) {
-			if (seconds <= 5) {
-				$(".timer").addClass('danger-clock');
-				$(".timer").removeClass('warning-clock');
-			} else {
-				$(".timer").removeClass('danger-clock');
+		if (seconds <= 15) {	
+				// $(".timer").removeClass('danger-clock');
 				$(".timer").addClass('warning-clock');
-
-				// setTimeout(function (e) {
-				// 	if (warning) {
-				// 		$('.fill-background').css({
-				// 			'background-color': '#dc0d32'
-				// 		});
-				// 	} else {
-				// 		$('.fill-background').css({
-				// 			'background-color': '#1bb287'
-				// 		});
-
-				// 	}
-				// 	warning = !warning;
-				// }, 1000);
 
 				if (warning) {
 
@@ -136,12 +171,8 @@ $(document).ready(function (e) {
 						backgroundColor: "#dc0d32"
 					}, 400);
 
-					// $('.timer').css({
-					// 	'--color':"#dc0d32"
-					// });
-
-					// document.querySelectorAll('.timer')[0].style.setProperty("--color", "#dc0d32");
-					// $('.timer').css('data-content','#dc0d32');
+					document.querySelectorAll('.timer')[0].style.setProperty("--color", "#dc0d32");
+					$('.timer').css('data-content', '#dc0d32');
 
 
 				} else {
@@ -149,23 +180,24 @@ $(document).ready(function (e) {
 						backgroundColor: "#1bb287"
 					}, 400);
 
-					// document.querySelectorAll('.timer')[0].style.setProperty("--color", "#1bb287");
-					// $('.timer').attr('data-content','#1bb287');
+					document.querySelectorAll('.timer')[0].style.setProperty("--color", "#1bb287");
+					$('.timer').attr('data-content', '#1bb287');
 				}
 				warning = !warning;
 
-			}
 		} else {
-			$(".timer").removeClass('warning-clock');
+			$(".warning-clock").removeClass('warning-clock');
+			$(".fill-background").animate({
+				backgroundColor: "#1bb287"
+			}, 400);
+			document.querySelectorAll('.timer')[0].style.setProperty("--color", "#1bb287");
+					$('.timer').attr('data-content', '#1bb287');
 		}
 	}
 
 	function changeBackground() {
+		$(".fill-background").removeClass('retract-background');
 		$(".fill-background").addClass('scale-background');
-	}
-
-	function temblarClock() {
-
 	}
 
 	$(".respuesta").click(function (e) {
@@ -175,32 +207,103 @@ $(document).ready(function (e) {
 		});
 
 		if (isCorrect) {
+			$(".segundos-aum-dis .signo").text('+');
+			$(".segundos-aum-dis").css({
+				'bottom': '-100px'
+			});
+
 			$("#puntuacion").text(
 				parseInt($("#puntuacion").text()) + puntajexPregunta
 			);
-		};
 
-		let segundosExtras = 3;
-		timer += segundosExtras;
-		gradosActual = gradosActual - ((gradosAvance * 100) * segundosExtras);
+			puntuacion = parseInt($("#puntuacion").text());
 
-		setTimeout(function (e) {
-			$('.fade-text').animate({
-				'opacity': '0.1'
+			$(".container-puntuacion span").animate({
+				'font-size': '1.7rem'
+			}, 300, function () {
+				$(".container-puntuacion span").animate({
+					'font-size': '1.5rem'
+				}, 300)
+			});
+
+			$(".segundos-aum-dis").animate({
+				'opacity': '1',
+				'bottom': '-60px'
 			}, 300, function (e) {
-				agregarPreguntas();
-				$('.fade-text').animate({
-					'opacity': '1'
-				}, 300);
+				$(".segundos-aum-dis").animate({
+					'opacity': '0'
+				}, 300, function (e) {
+					$(".segundos-aum-dis").css({
+						'bottom': '-80px'
+					})
+				})
+			});
 
-				preguntaActual++;
+			if (timer < 20) {
+				let segundosExtras = 3;
+				if (timer >= 17) {
+					segundosExtras = 20 - timer;
+				}
+				timer += segundosExtras;
+				gradosActual = gradosActual - ((gradosAvance * 100) * segundosExtras);
+			}
+		} else {
+			$(".segundos-aum-dis .signo").text('-');
+			$(".segundos-aum-dis").css({
+				'bottom': '-60px'
+			});
 
-			})
-		}, 300);
+			$(".segundos-aum-dis").animate({
+				'opacity': '1',
+				'bottom': '-100px'
+			}, 300, function (e) {
+				$(".segundos-aum-dis").animate({
+					'opacity': '0'
+				}, 300, function (e) {
+					$(".segundos-aum-dis").css({
+						'bottom': '-80px'
+					})
+				})
+			});
+
+			if (timer > 0) {
+				let segundosExtras = 3;
+				if ((timer - 3) <= 0) {
+					segundosExtras = timer;
+				}
+				timer -= segundosExtras;
+				gradosActual = gradosActual + ((gradosAvance * 100) * segundosExtras);
+			}
+		}
+
+
+
+		// if(timer < 20){
+		// 	let segundosExtras = 3;
+		// 	if(timer >=17){
+		// 		segundosExtras = 20 - timer;
+		// 	}
+		// 	timer += segundosExtras;
+		// 	gradosActual = gradosActual - ((gradosAvance * 100) * segundosExtras);
+		// }
+
+
+		// setTimeout(function (e) {
+		// 	$('.fade-text').animate({
+		// 		'opacity': '0.1'
+		// 	}, 300, function (e) {
+		// 		console.log("asdasdasdasdasda");
+		// 		$('.fade-text').animate({
+		// 			'opacity': '1'
+		// 		}, 300);
+		// 		// preguntaActual++;
+		// 	})
+		// }, 300);
+		agregarPreguntas();
 	});
 
 	$(".scoreboard").click(function (e) {
-
+		$(".container-puntuaciones").children().remove();
 		$(".scoreboard-container").fadeIn(200);
 
 		$.ajax({
@@ -210,19 +313,40 @@ $(document).ready(function (e) {
 			success: function (puntuaciones) {
 				puntuaciones.forEach((e) => {
 					let template = `	<div class="puntuaciones" style="margin-bottom: 10px">
-												<span style="padding-right: 10px;">${e.nombre}</span>
-												<span>..............................................................................................</span>
-												<span style="padding-left: 10px;">${e.puntos}</span>
-											</div>`;
+					<span style="padding-right: 10px;">${e.nombre}</span>
+					<span>..............................................................................................</span>
+					<span style="padding-left: 10px;">${e.puntos}</span>
+					</div>`;
 					$(".scoreboard-container .container-puntuaciones").append(template);
 				})
 			}
 		});
-
-
 	});
 
 	$(".btn-cerrar").click(function (e) {
 		$(".scoreboard-container").fadeOut(200);
-	})
+	});
+
+	$(".btn-aceptar").click(function (e) {
+		$(".container-puntuacion").css({
+			'color': '#000'
+		});
+
+		gradosActual = 0;
+		segundos = 20;
+		preguntaActual = 0;
+
+		$("#puntuacion").text('0');
+		$("#txtNombre").val('');
+		$(".preguntas-random, .titulo-app, .nombre input").removeClass('hidden');
+
+		$(".start-game").removeClass('hidden');
+
+		$(".container-puntuacion").fadeIn(200);
+
+		$(".mi-puntuacion").fadeOut(100);
+		$(".scoreboard").fadeIn(200);
+
+		$(".container-puntuacion").fadeIn(200);
+	});
 })

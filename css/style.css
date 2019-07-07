@@ -295,11 +295,28 @@ body {
 }
 
 .scale-background {
-	transform: scale(1000);
-	transition: transform .9s ease-in;
+	transform: scale(500);
+	transition: transform .4s ease-in;
 	/*transition:  transform .2s; */
 	/* animation: fillBackground .2s ease-in;
 	animation-fill-mode: forwards; */
+}
+
+.retract-background{
+	transform: scale(1);
+	transition: transform .5s ease-in;
+}
+
+.segundos-aum-dis{
+	position: absolute;
+	right: -24px;
+	top: 0;
+	bottom: -80px;
+	font-size: 1.4rem;
+	color: #fff;
+	margin: auto;
+	height: 10px;
+	opacity: 0;
 }
 
 
@@ -315,7 +332,7 @@ body {
 	bottom: 10px;
 	left: 10px;
 	color: #000;
-	font-size: 1.4rem;
+	font-size: 1.5rem;
 	font-weight: 600;
 }
 
@@ -362,7 +379,8 @@ body {
 	z-index: 0;
 }
 
-.btn-cerrar{
+.btn-cerrar,
+.btn-aceptar{
 	border: none;
 	background: #000;
 	color: #fff;
@@ -378,4 +396,36 @@ body {
 
 .fade-text{
 	visibility: visible;
+}
+
+.mi-puntuacion{
+	position: absolute;
+	top:-100px;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	margin: auto;
+	height: min-content;
+	color: #000;
+	width: 400px;
+	background: #fff;
+	display: none;
+}
+
+.mi-puntuacion p{
+	text-align: center;
+	font-size: 2rem;
+	font-weight: 600;
+}
+
+.mi-puntuacion .puntos{
+	text-align: center;
+	font-size: 10rem;
+	font-weight: 600;
+	margin-top: 20px;
+	margin-bottom: 0;
+}
+
+.mi-puntuacion .posicion{
+	/* margin-top: 30px; */
 }

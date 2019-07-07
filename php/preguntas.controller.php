@@ -14,14 +14,14 @@ class Preguntas
 							t.opcion_3 r3,
 							t.opcion_4 r4,
 							t.respuesta_correcta ok
-				  FROM preguntas AS t 
-				  JOIN (SELECT ROUND(RAND() * (SELECT MAX(id_pregunta) FROM preguntas)) AS id) AS x 
-				  WHERE t.id_pregunta >= x.id LIMIT 10";
+				  FROM preguntas t";
 
 		$stmt = $conexion->prepare($sql);
 		$stmt->execute();
 
 		$articulos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+		// print_r($articulos);
 
 		echo json_encode($articulos);
 	}
@@ -43,6 +43,21 @@ class Preguntas
 
 		echo json_encode($articulos);
 	}
+
+	public function guardarPuntuacion(){
+		$conexion = Conexion::getConexion();
+
+		$sql = "INSERT INTO puntuaciones (nombre, puntos)
+					VALUES(:nombre, :puntos)";
+
+		$stmt = $conexion->prepare($sql);
+		$stmt->execute([
+			'nombre' => $_POST['nombre'],
+			'puntos' => $_POST['puntos']
+		]);
+
+		echo json_encode($stmt->rowCount());
+	}
 }
 
 $preguntas = new Preguntas();
@@ -51,4 +66,6 @@ if ($_GET['action'] == 'consultar') {
 	$preguntas->consultarPreguntas();
 }elseif($_GET['action'] == 'consultarPuntuaciones'){
 	$preguntas->consultarPuntuaciones();
+}elseif($_GET['action'] == 'guardarPuntuacion'){
+	$preguntas->guardarPuntuacion();
 }
